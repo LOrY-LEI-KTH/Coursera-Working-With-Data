@@ -4,6 +4,8 @@ import Constants from 'expo-constants';
 import { Switch } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import useUpdate from './useUpdate';
+
 export default function App() {
   const [preferences, setPreferences] = React.useState({
     pushNotifications: false,
@@ -17,7 +19,7 @@ export default function App() {
       [key]: !prevState[key],
     }));
 
-   React.useEffect(() => { 
+    useUpdate(() => { 
       (async () => { 
         // Use AsyncStorage.multiSet API to persist each preference under a separate key. 
         
