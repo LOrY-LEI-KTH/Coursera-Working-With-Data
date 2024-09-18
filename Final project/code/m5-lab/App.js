@@ -49,15 +49,18 @@ export default function App() {
     try{
       const response = await fetch(API_URL);
       const rawData = await response.json();
-     const items  = rawData.map( item => {return {...item, category: item.category.title}}) ;
+      
+     const items  = rawData.menu.map(item => {
+      return {
+        ...item,
+        category: item.category.title // Flatten the category object to get the title
+      };
+    });
+    return items;
     }
     catch(error){
       console.log(error);
-    } 
-
-
-
-    return items;
+    }
   }
 
   useEffect(() => {
