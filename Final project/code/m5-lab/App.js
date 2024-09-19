@@ -70,12 +70,13 @@ export default function App() {
         // and then stores it into a SQLite database.
         // After that, every application restart loads the menu from the database
         if (!menuItems.length) {
-          const menuItems = await fetchData();
+          menuItems = await fetchData();
           saveMenuItems(menuItems);
         }
 
         const sectionListData = getSectionListData(menuItems);
         setData(sectionListData);
+        console.log("output to getSectionListData length", sectionListData[0]);
       } catch (e) {
         // Handle error
         Alert.alert(e.message);
@@ -99,6 +100,10 @@ export default function App() {
         );
         const sectionListData = getSectionListData(menuItems);
         setData(sectionListData);
+        console.log(
+          "output to getSectionListData lengt 111h",
+          sectionListData[0]
+        );
       } catch (e) {
         Alert.alert(e.message);
       }
