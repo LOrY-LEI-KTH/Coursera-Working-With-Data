@@ -76,7 +76,6 @@ export default function App() {
 
         const sectionListData = getSectionListData(menuItems);
         setData(sectionListData);
-        console.log("output to getSectionListData length", sectionListData[0]);
       } catch (e) {
         // Handle error
         Alert.alert(e.message);
@@ -93,17 +92,16 @@ export default function App() {
         }
         return filterSelections[i];
       });
+      console.log(activeCategories);
       try {
         const menuItems = await filterByQueryAndCategories(
           query,
           activeCategories
         );
+
+        console.log("menuItems after filtering", menuItems);
         const sectionListData = getSectionListData(menuItems);
         setData(sectionListData);
-        console.log(
-          "output to getSectionListData lengt 111h",
-          sectionListData[0]
-        );
       } catch (e) {
         Alert.alert(e.message);
       }

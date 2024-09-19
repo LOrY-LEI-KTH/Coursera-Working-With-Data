@@ -1,14 +1,14 @@
-import * as SQLite from 'expo-sqlite';
-import { SECTION_LIST_MOCK_DATA } from './utils';
+import * as SQLite from "expo-sqlite";
+import { SECTION_LIST_MOCK_DATA } from "./utils";
 
-const db = SQLite.openDatabase('little_lemon');
+const db = SQLite.openDatabase("little_lemon");
 
 export async function createTable() {
   return new Promise((resolve, reject) => {
     db.transaction(
       (tx) => {
         tx.executeSql(
-          'create table if not exists menuitems (id integer primary key not null, uuid text, title text, price text, category text);'
+          "create table if not exists menuitems (id integer primary key not null, uuid text, title text, price text, category text);"
         );
       },
       reject,
@@ -20,7 +20,7 @@ export async function createTable() {
 export async function getMenuItems() {
   return new Promise((resolve) => {
     db.transaction((tx) => {
-      tx.executeSql('select * from menuitems', [], (_, { rows }) => {
+      tx.executeSql("select * from menuitems", [], (_, { rows }) => {
         resolve(rows._array);
       });
     });
@@ -29,15 +29,19 @@ export async function getMenuItems() {
 
 export function saveMenuItems(menuItems) {
   db.transaction((tx) => {
-
-    
     // 2. Implement a single SQL statement to save all menu data in a table called menuitems.
     // Check the createTable() function above to see all the different columns the table has
     // Hint: You need a SQL statement to insert multiple rows at once.
-    const values = menuItems.map(item => `('${item.id}', '${item.title}', '${item.price}', '${item.category}')`).join(', ');
-      
-    tx.executeSql('INSERT INTO menuitems (uuid, title, price, category) VALUES ${values}', );
-    
+    const values = menuItems
+      .map(
+        (item) =>
+          `('${item.id}', '${item.title}', '${item.price}', '${item.category}')`
+      )
+      .join(", ");
+
+    tx.executeSql(
+      `INSERT INTO menuitems (uuid, title, price, category) VALUES ${values}`
+    );
   });
 }
 
@@ -62,7 +66,22 @@ export function saveMenuItems(menuItems) {
  *
  */
 export async function filterByQueryAndCategories(query, activeCategories) {
+  const catTuple = activeCategories.map((cat) => `'${cat}'`).join(",");
+
+  const sql = `select * from menuitems WHERE category IN (${catTuple}) AND title LIKE '%${query}%';`;
   return new Promise((resolve, reject) => {
-    resolve(SECTION_LIST_MOCK_DATA);
+    db.transaction((tx) => {
+      tx.executeSql(
+        sql,
+        [],
+        (_, { rows }) => {
+          resolve(rows._array);
+        },
+        (_, error) => {
+          console.error("Error filtering menu items:", error);
+          reject(error);
+        }
+      );
+    });
   });
 }
