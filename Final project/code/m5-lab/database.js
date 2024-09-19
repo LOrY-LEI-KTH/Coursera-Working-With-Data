@@ -78,7 +78,7 @@ export async function filterByQueryAndCategories(query, activeCategories) {
           resolve(rows._array);
         },
         (_, error) => {
-          console.error("Error filtering menu items:", error);
+          console.error("Error:", error);
           reject(error);
         }
       );
